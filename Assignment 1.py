@@ -49,56 +49,31 @@ rule9 = ctrl.Rule(traffic_volume['high'] & public_transport_usage['low'] & carbo
 rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9]
 
 # Create the control system
-sustainability_ctrl = ctrl.ControlSystem(rules=rules)
-sustainability = ctrl.ControlSystemSimulation(control_system=sustainability_ctrl)
+sustainability_ctrl = ctrl.ControlSystem(rules)
+sustainability = ctrl.ControlSystemSimulation(sustainability_ctrl)
 
-# Define the values for the inputs for testing
-sustainability.input['traffic_volume'] = 500
-sustainability.input['public_transport_usage'] = 30
-sustainability.input['carbon_emissions'] = 150
+# View the control/output space
+x, y = np.meshgrid(np.linspace(traffic_volume.universe.min(), traffic_volume.universe.max(), 100),
+                   np.linspace(public_transport_usage.universe.min(), public_transport_usage.universe.max(), 100))
+z_sustainable_transport = np.zeros_like(x, dtype=float)
 
-# Compute the outputs
-sustainability.compute()
-
-# Print the output values
-print(sustainability.output['sustainable_transport_index'])
-
-# To visualize the outputs
-traffic_volume_range = np.linspace(0, 1200, 10)  # Reduced number for quicker computation
-public_transport_usage_range = np.linspace(0, 100, 10)
-carbon_emissions_range = np.linspace(0, 400, 10)
-
-# Prepare an array to hold the outputs
-sustainable_transport_index_output = []
-
-# Loop through the combinations of inputs
-for traffic in traffic_volume_range:
-    for public in public_transport_usage_range:
-        for carbon in carbon_emissions_range:
-            sustainability.input['traffic_volume'] = traffic
-            sustainability.input['public_transport_usage'] = public
-            sustainability.input['carbon_emissions'] = carbon
+# Loop through every point and identify the value of sustainable_transport_index
+for i, r in enumerate(x):
+    for j, c in enumerate(r):
+        sustainability.input['traffic_volume'] = x[i, j]
+        sustainability.input['public_transport_usage'] = y[i, j]
+        try:
             sustainability.compute()
-            sustainable_transport_index_output.append(sustainability.output['sustainable_transport_index'])
+            z_sustainable_transport[i, j] = sustainability.output['sustainable_transport_index']
+        except:
+            z_sustainable_transport[i, j] = float('inf')
+            
 
-# Convert the output list to a NumPy array for easier manipulation
-sustainable_transport_index_output = np.array(sustainable_transport_index_output)
+# Plot the result in a 3D graph
+def plot3d(x, y, z):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_trisurf(x.flatten(), y.flatten(), z.flatten(), cmap='viridis', linewidth=0.2, antialiased=True)
+    ax.view_init(30, 200)
 
-# Reshape the output for plotting
-sustainable_transport_index_output = sustainable_transport_index_output.reshape(len(traffic_volume_range), len(public_transport_usage_range), len(carbon_emissions_range))
-
-# Create a 3D plot
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-
-# Create a meshgrid for plotting
-X, Y = np.meshgrid(public_transport_usage_range, traffic_volume_range)
-Z = sustainable_transport_index_output[:, :, 0]  # Use the first carbon emissions value for simplicity
-
-# Plot the surface
-ax.plot_surface(X, Y, Z, cmap='viridis')
-
-ax.set_xlabel('Public Transport Usage Rate')
-ax.set_ylabel('Traffic Volume')
-ax.set_zlabel('Sustainable Transportation Index')
-plt.show()
+plot3d(x, y, z_sustainable_transport)
