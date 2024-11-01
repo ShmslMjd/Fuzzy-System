@@ -17,20 +17,28 @@ traffic_volume['low'] = mf.trimf(traffic_volume.universe, [0, 0, 200])
 traffic_volume['moderate'] = mf.trimf(traffic_volume.universe, [200, 500, 800])
 traffic_volume['high'] = mf.trimf(traffic_volume.universe, [800, 1000, 1200])
 
+traffic_volume.view()
+
 # Membership functions for Public Transport Usage Rate
 public_transport_usage['low'] = mf.trimf(public_transport_usage.universe, [0, 0, 20])
 public_transport_usage['moderate'] = mf.trimf(public_transport_usage.universe, [20, 40, 60])
 public_transport_usage['high'] = mf.trimf(public_transport_usage.universe, [60, 80, 100])
+
+public_transport_usage.view()
 
 # Membership functions for Carbon Emissions per Vehicle
 carbon_emissions['low'] = mf.trimf(carbon_emissions.universe, [0, 0, 100])
 carbon_emissions['moderate'] = mf.trimf(carbon_emissions.universe, [100, 150, 200])
 carbon_emissions['high'] = mf.trimf(carbon_emissions.universe, [200, 300, 400])
 
+carbon_emissions.view()
+
 # Membership functions for Sustainable Transportation Index
 sustainable_transport_index['low'] = mf.trimf(sustainable_transport_index.universe, [0, 0, 50])
 sustainable_transport_index['moderate'] = mf.trimf(sustainable_transport_index.universe, [50, 75, 85])
 sustainable_transport_index['high'] = mf.trimf(sustainable_transport_index.universe, [85, 90, 100])
+
+sustainable_transport_index.view()
 
 # Define the rules
 rule1 = ctrl.Rule(traffic_volume['low'] & public_transport_usage['high'] & carbon_emissions['low'], sustainable_transport_index['high'])
@@ -51,6 +59,17 @@ rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9]
 # Create the control system
 sustainability_ctrl = ctrl.ControlSystem(rules)
 sustainability = ctrl.ControlSystemSimulation(sustainability_ctrl)
+
+sustainability.input['traffic_volume'] = 400
+sustainability.input['public_transport_usage'] = 30
+sustainability.input['carbon_emissions'] = 130
+
+sustainability.compute()
+
+print(sustainability.output)
+print(sustainability.output['sustainable_transport_index'])
+
+sustainable_transport_index.view(sim=sustainability)
 
 # View the control/output space
 x, y = np.meshgrid(np.linspace(traffic_volume.universe.min(), traffic_volume.universe.max(), 100),
