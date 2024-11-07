@@ -43,22 +43,29 @@ sustainability_index['very high'] = mf.trapmf(sustainability_index.universe, [80
 
 sustainability_index.view()
 
-# Define rules
-rule1 = ctrl.Rule(public_transport_usage['very low'] & traffic_volume['very low'], (API['very high'], sustainability_index['very low']))
-rule2 = ctrl.Rule(public_transport_usage['very low'] & traffic_volume['low'], (API['very high'], sustainability_index['very low']))
-rule3 = ctrl.Rule(public_transport_usage['very low'] & traffic_volume['medium'], (API['very high'], sustainability_index['very low']))
-rule4 = ctrl.Rule(public_transport_usage['low'] & traffic_volume['very low'], (API['high'], sustainability_index['low']))
-rule5 = ctrl.Rule(public_transport_usage['low'] & traffic_volume['low'], (API['high'], sustainability_index['low']))
-rule6 = ctrl.Rule(public_transport_usage['low'] & traffic_volume['medium'], (API['high'], sustainability_index['low']))
-rule7 = ctrl.Rule(public_transport_usage['medium'] & traffic_volume['low'], (API['medium'], sustainability_index['low']))
-rule8 = ctrl.Rule(public_transport_usage['medium'] & traffic_volume['medium'], (API['medium'], sustainability_index['medium']))
-rule9 = ctrl.Rule(public_transport_usage['high'] & traffic_volume['medium'], (API['low'], sustainability_index['high']))
-rule10 = ctrl.Rule(public_transport_usage['high'] & traffic_volume['high'], (API['low'], sustainability_index['high']))
-rule11 = ctrl.Rule(public_transport_usage['very high'] & traffic_volume['medium'], (API['very low'], sustainability_index['very high']))
-rule12 = ctrl.Rule(public_transport_usage['very high'] & traffic_volume['high'], (API['very low'], sustainability_index['very high']))
+# Define rules 
+rule1 = ctrl.Rule(public_transport_usage['very low'] & traffic_volume['very low'], (API['low'], sustainability_index['medium'])) 
+rule2 = ctrl.Rule(public_transport_usage['very low'] & traffic_volume['low'], (API['medium'], sustainability_index['low'])) 
+rule3 = ctrl.Rule(public_transport_usage['very low'] & traffic_volume['medium'], (API['high'], sustainability_index['low'])) 
+rule4 = ctrl.Rule(public_transport_usage['very low'] & traffic_volume['high'], (API['very high'], sustainability_index['very low'])) 
+rule5 = ctrl.Rule(public_transport_usage['low'] & traffic_volume['very low'], (API['very low'], sustainability_index['high'])) 
+rule6 = ctrl.Rule(public_transport_usage['low'] & traffic_volume['low'], (API['low'], sustainability_index['medium'])) 
+rule7 = ctrl.Rule(public_transport_usage['low'] & traffic_volume['medium'], (API['medium'], sustainability_index['low'])) 
+rule8 = ctrl.Rule(public_transport_usage['low'] & traffic_volume['high'], (API['high'], sustainability_index['low'])) 
+rule9 = ctrl.Rule(public_transport_usage['medium'] & traffic_volume['very low'], (API['very low'], sustainability_index['very high'])) 
+rule10 = ctrl.Rule(public_transport_usage['medium'] & traffic_volume['low'], (API['low'], sustainability_index['high'])) 
+rule11 = ctrl.Rule(public_transport_usage['medium'] & traffic_volume['medium'], (API['medium'], sustainability_index['medium'])) 
+rule12 = ctrl.Rule(public_transport_usage['medium'] & traffic_volume['high'], (API['high'], sustainability_index['low'])) 
+rule13 = ctrl.Rule(public_transport_usage['high'] & traffic_volume['very low'], (API['very low'], sustainability_index['very high'])) 
+rule14 = ctrl.Rule(public_transport_usage['high'] & traffic_volume['low'], (API['low'], sustainability_index['high'])) 
+rule15 = ctrl.Rule(public_transport_usage['high'] & traffic_volume['medium'], (API['medium'], sustainability_index['medium'])) 
+rule16 = ctrl.Rule(public_transport_usage['high'] & traffic_volume['high'], (API['high'], sustainability_index['medium'])) 
+rule17 = ctrl.Rule(public_transport_usage['very high'] & traffic_volume['very low'], (API['very low'], sustainability_index['very high'])) 
+rule18 = ctrl.Rule(public_transport_usage['very high'] & traffic_volume['low'], (API['low'], sustainability_index['high'])) 
+rule19 = ctrl.Rule(public_transport_usage['very high'] & traffic_volume['medium'], (API['medium'], sustainability_index['high'])) 
+rule20 = ctrl.Rule(public_transport_usage['very high'] & traffic_volume['high'], (API['very high'], sustainability_index['medium'])) 
 
-rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12]
-
+rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13, rule14, rule15, rule16, rule17, rule18, rule19, rule20]
 # Control system and simulation
 control_system = ctrl.ControlSystem(rules=rules)
 simulation = ctrl.ControlSystemSimulation(control_system=control_system)
