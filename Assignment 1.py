@@ -70,9 +70,13 @@ rules = [rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, 
 control_system = ctrl.ControlSystem(rules=rules)
 simulation = ctrl.ControlSystemSimulation(control_system=control_system)
 
-# Test input values
-simulation.input['traffic volume'] = 1500
-simulation.input['public transport usage'] = 50
+# User inputs for traffic volume and public transport usage 
+traffic_volume_input = float(input("Enter traffic volume (0-3000): ")) 
+public_transport_usage_input = float(input("Enter public transport usage (0-100): ")) 
+
+# Test input values 
+simulation.input['traffic volume'] = traffic_volume_input 
+simulation.input['public transport usage'] = public_transport_usage_input
 
 simulation.compute()
 
